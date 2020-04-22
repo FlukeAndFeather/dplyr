@@ -129,3 +129,12 @@ test_that("group_map() give meaningful errors", {
     iris %>% group_by(Species) %>% group_map(head1)
   })
 })
+
+test_that("group_modify() doesn't fail on matrix columns (#5138)", {
+  df_matcol <- tibble(x = c("a", "b"), y = matrix(1:4, ncol = 2))
+  res <- df_matcol %>%
+    group_by(x) %>%
+    group_modify(~ .x) %>%
+    ungroup()
+  expect_equal(df_matcol, res)
+})
